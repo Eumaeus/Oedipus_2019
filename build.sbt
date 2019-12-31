@@ -34,7 +34,7 @@ libraryDependencies ++=   Seq(
   "edu.holycross.shot" %% "citeobj" % "7.3.4",
   "edu.holycross.shot" %% "citerelations" % "2.5.2",
   "edu.holycross.shot" %% "cex" % "6.3.3",
-  "edu.holycross.shot" %% "greek" % "2.3.3",
+  "edu.holycross.shot" %% "greek" % "2.4.0",
   "edu.furman.classics" %% "citewriter" % "1.2.2",
   "com.github.pathikrit" %% "better-files" % "3.8.0"
 )

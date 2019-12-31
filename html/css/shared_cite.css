@@ -1,0 +1,38 @@
+html {
+	margin: 4em;
+	font: 24px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	line-height: 1.3em;
+}
+
+.ohco2_commentBlock {
+	font-size: 85%;
+}
+
+.ohco2_commentBlock .ohco2_citableNodeContainer	{
+	margin-left: 3em;	
+}
+
+.ohco2_citableNodeContainer {
+	display: block;
+	padding: 0.5em;
+}
+
+.cite_urn {
+	color: navy;
+	font-family: "Lucida Sans Typewriter", Monaco, Monospace;
+}
+
+.ohco2_tokenized > span {
+	display: inline-block;
+}
+
+.cite_urn {
+	display: none;
+}
+
+.ot_lineNo {
+	color: maroon;
+	font-size: 75%;
+	width: 3em;
+	display: inline-block;
+}

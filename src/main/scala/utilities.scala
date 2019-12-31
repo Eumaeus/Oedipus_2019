@@ -1,5 +1,5 @@
 package edu.furman.classics.oedipus2019
-
+import scala.io.Source
 import better.files._
 import java.io.{File => JFile}
 import edu.holycross.shot.cite._
@@ -23,8 +23,7 @@ object utilities {
 	}
 
 	def loadLibrary(fp:String):CiteLibrary = {
-		val file:  File = File(fp)
-		val library = CiteLibrary(file.lines.toVector.mkString("\n"))
+		val library = CiteLibrary(Source.fromFile(fp).getLines.mkString("\n"))
 		library
 	}
 
@@ -38,6 +37,10 @@ object utilities {
 		for (s <- sv){
 			file.appendLine().append(s)
 		}
+	}
+
+	def urnToHtmlId( u: Urn ): String = {
+		u.toString.replaceAll("[.:]","_")
 	}
 
 	def saveString(s:String, filePath:String = "texts/", fileName:String = "temp.txt"):Unit = {
@@ -68,23 +71,23 @@ object utilities {
 			
 		}
 
-		def makeNGrams( n: Int, textVec: Vector[String] ): Vector[(String, Int)] = {
-			// Using .sliding, let's get all possible combinations of N tokens
-			val slid: Vector[String] = {
-				val slid: Vector[Vector[String]] = textVec.sliding(n,1).toVector
-				val toStrings: Vector[String] = slid.map( _.mkString(" ") )
-				toStrings
-			}
+	def makeNGrams( n: Int, textVec: Vector[String] ): Vector[(String, Int)] = {
+		// Using .sliding, let's get all possible combinations of N tokens
+		val slid: Vector[String] = {
+			val slid: Vector[Vector[String]] = textVec.sliding(n,1).toVector
+			val toStrings: Vector[String] = slid.map( _.mkString(" ") )
+			toStrings
+		}
 
-			val nGramTuples: Vector[(String, Int)] = {
-				slid.groupBy( s => s).toVector.map( n => {
-					( n._1, n._2.size )
-				})
-			}
+		val nGramTuples: Vector[(String, Int)] = {
+			slid.groupBy( s => s).toVector.map( n => {
+				( n._1, n._2.size )
+			})
+		}
 
-		nGramTuples.sortBy(_._2).reverse
+	nGramTuples.sortBy(_._2).reverse
 
-	}
+}
 
 
 	// source: https://gist.github.com/sebleier/554280

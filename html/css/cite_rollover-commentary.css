@@ -1,0 +1,35 @@
+
+#cite_rollover_commentary_text {
+	max-width: 55%;
+	border: 1px solid silver;
+	display: block;
+}
+
+#cite_rollover_commentary_comments {
+	position: fixed;
+	display: block;
+	top: 25px;
+	right: 25px;
+	max-width: 30%;
+	width: 35em;
+	border: 1px solid silver ;
+	padding: 1em;
+}
+
+.cite_rollover_commentary_comment {
+	display: none;
+}
+
+.cite_rollover_commentary_comment.visible {
+	display: block;
+}
+
+#cite_rollover_commentary_text span.ohco2_citableNodeText.selected {
+	background-color: rgba(255,255,0);
+}
+
+#cite_rollover_commentary_text span.ohco2_citableNodeText:hover {
+	background-color: lemonChiffon;
+}
+
+
