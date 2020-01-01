@@ -36,7 +36,7 @@ object syntax {
 				""".replaceAll("\n"," ").replaceAll("\t"," ").replaceAll(" +"," ")
 			}
 
-			val divId: String = s"syntax-${sentenceUrn}"
+			val divId: String = s"syntax-${utilities.urnToHtmlId(sentenceUrn)}"
 
 			val template: String = s""" {
 		    chart: {
@@ -54,7 +54,7 @@ object syntax {
 		        }
 		    },
 		    SYNTAX_CONTENT_HERE
-		  },"""
+		 }"""
 
 		  template.replaceAll("SYNTAX_CONTENT_HERE", nodeStructure )
 		}

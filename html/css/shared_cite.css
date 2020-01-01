@@ -1,7 +1,18 @@
 html {
 	margin: 4em;
-	font: 24px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	line-height: 1.3em;
+	font-family: "EB Garamond",  "LinuxLibertineORegular", "AseaRegular", "Times", serif; 
+	line-height: 1.5em;
+	color: #222;
+	font-size: 14pt;
+	background-color: rgba(201, 194, 183, 0.24);
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	background-color: yellow;
 }
 
 .ohco2_commentBlock {
@@ -35,4 +46,36 @@ html {
 	font-size: 75%;
 	width: 3em;
 	display: inline-block;
+}
+
+.ot_morph {
+	color: maroon;
+	font-weight: bold;
+}
+
+.ot_lsj_link {
+	background-color: white;
+	padding: 0.5em;
+}
+
+.ot_lsj_link a {
+	display: block;
+	background-color: navy;
+	color: white;
+	padding: 8px 10px 8px 10px;
+	font-size: 150%;
+	margin-bottom: 10px;
+}
+
+.ot_lsj_link a:hover {
+	color: yellow;
+}
+
+.open-syntax-modal {
+	color: #444;
+	font-family: Helvetica, Sans;
+	font-size: 80%;
+	background-color: white;
+	border: 2px solid navy;
+	padding: 8px;
 }

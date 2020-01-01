@@ -28,8 +28,7 @@ object utilities {
 	}
 
 	def loadFile( fp: String ): Vector[String] = {
-		val file: File = File(fp)
-		file.lines.toVector
+		Source.fromFile(fp).getLines.toVector
 	}
 
 	def saveStringVec(sv:Vector[String], filePath:String = "texts/", fileName:String = "temp.txt"):Unit = {

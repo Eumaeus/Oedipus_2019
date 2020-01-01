@@ -21,4 +21,6 @@ div.cite_showhide_open:after {
 
 div.cite_showhide_header + * {
   background-color: #eee;
+  margin-left: 2em;
+  margin-right: 1em;
 }

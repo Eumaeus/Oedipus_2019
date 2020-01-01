@@ -5,11 +5,33 @@ import java.io.{File => JFile}
 import edu.holycross.shot.cite._
 import edu.holycross.shot.scm._
 import edu.holycross.shot.ohco2._
+import edu.holycross.shot.citeobj._
 import scala.annotation.tailrec
 import edu.furman.classics.citewriter._
 
 
 object writer {
+
+	case class LsjDef( urn: Cite2Urn, lemma: String, entry: String)
+
+	def shortDefHtml( urnOption: Option[Cite2Urn], lsj: Vector[LsjDef] ): String = {
+		val lexUrl = "http://folio2.furman.edu/lsj/?urn="	
+		urnOption match {
+			case None => s"""<p class="ot_lsj_link">No LSJ entry found.</p>"""
+			case Some(u) => {
+				val foundEntry: Option[LsjDef] = lsj.find( _.urn.dropVersion == u.dropVersion)
+				foundEntry match {
+					case None => s"""<p class="ot_lsj_link">No LSJ entry found for ${u}.</p>"""
+					case Some(e) => {
+						s"""<p class="ot_lsj_link">
+						<a href="${lexUrl}${u.dropVersion}"><span class="ot_lsj_lemma">${e.lemma}</a>
+						<span class="ot_lsj_def">${e.entry}</span>
+						</p>"""
+					}
+				}
+			}
+		}	
+	}
 	
 	def writeTextBlock( vcc: Vector[(Corpus,Corpus)] ): String = {
 		val readerWrapper = """<div class="ohco2_versionCorpus"><div class="ohco2_passageGroup  ohco2_stanza ">"""
@@ -44,12 +66,83 @@ object writer {
 		}).mkString("\n")
 	}
 
-	def htmlPage( p: otPage, path: String): Unit = {
+	def writeMorphBlock(vcc: Vector[ (Corpus, Corpus) ], oTokens: Vector[OToken], lexColl: Vector[LsjDef]): String = {
+			vcc.map( cc => {
+				val corp: Corpus = cc._2
+				corp.nodes.map(n => {
+					val nodeUrn = n.urn
+					val opener = s"""<div class="cite_rollover_commentary_comment" data-commentsOn="${nodeUrn}">"""
+					val thisToken: Option[OToken] = {
+						oTokens.find( _.ctsUrn == nodeUrn )
+					}
+					thisToken match {
+						case Some(tok) => {
+							val morph = s"""<span class="ot_morph">${tok.morph}</span>"""
+							val lemmaUrn = tok.lemmaUrn
+							val sentence = tok.sentenceUrn
+							val lsjLink = shortDefHtml(lemmaUrn, lexColl)
+							s"""${opener}<p>${morph}</p>
+							${lsjLink}
+							<p><a class="open-syntax-modal" id="load-syntax-${utilities.urnToHtmlId(sentence)}" data-target="syntax-${utilities.urnToHtmlId(sentence)}">Show Syntax.</a></p>
+							</div>"""
+						}
+						case None => ""
+					}
+				}).mkString("\n")
+			}).mkString("\n")
+	}
+
+	def makeSyntaxFile(p: otPage, oTokens: Vector[OToken], ot: Oedipus): String = {
+		val opener = s"""var configArray = Array(\n"""
+		val closer = s""");\n\nvar tokenIndex = new Map();"""
+
+		val tokens: Vector[CtsUrn] = {
+			p.vcc.map( cc => {
+				cc._2.urns
+			}).flatten
+		}
+		val sentences: Vector[Cite2Urn] = {
+			tokens.view.map( t => {
+				oTokens.find( _.ctsUrn == t)
+			}).filter( _ != None).map( _.get).map(_.sentenceUrn).toVector.distinct	
+		}
+		val syntaxes: Vector[syntax.SyntaxSentence] = {
+			sentences.map( s => {
+				ot.getSyntax(oTokens, s)
+			})
+		}
+
+		val jsonString = syntaxes.map( s => {
+			val containerId = s"syntax-${utilities.urnToHtmlId(s.sentenceUrn)}"
+			s"""{ containerId: "${containerId}", json: ${s.toJson} }, """
+		}).mkString("\n")
+
+		opener + jsonString + closer
+	}
+
+	def htmlPage( p: otPage, oTokens: Vector[OToken], lexColl: Vector[LsjDef], path: String, ot: Oedipus): Unit = {
 		val template: String = getTemplate
 		// Write text-content
 		val textBlock: String = writeTextBlock(p.vcc)
+		// Write morphology
+		val morphologyBlock: String = writeMorphBlock(p.vcc, oTokens, lexColl)
+		// Write syntax
+		val syntaxFileName: String = s"""syntax-${p.fileName.replaceAll("\\.html","")}.js"""
+		val syntaxData: String = makeSyntaxFile(p, oTokens, ot)
+		utilities.saveString(syntaxData, path, syntaxFileName)
+		// Get navigation
+		val navString: String = {
+			getNavString(p.prevFn, p.nextFn)
+		}
+		// Get basic line-numbers
+		val lineNumbers: String = {
+			val fromLine: String = p.vcc.head._1.urns.head.collapsePassageTo(1).passageComponent
+			val toLine: String = p.vcc.last._1.urns.last.collapsePassageTo(1).passageComponent 
+			s"Lines ${fromLine} to ${toLine}."
+		}
+
 		// Swap in text-content
-		val withText: String = template.replaceAll("TEXT_GOES_HERE", textBlock)
+		val withText: String = template.replaceAll("TEXT_GOES_HERE", textBlock).replaceAll("MORPHOLOGY_GOES_HERE",morphologyBlock).replaceAll("SYNTAX_DATA_FILE_NAME",syntaxFileName).replaceAll("LINE_NUMBERS_HERE", lineNumbers).replaceAll("NAVIGATION_HERE", navString)
 		utilities.saveString(withText, path, p.fileName)
 	}
 
@@ -60,7 +153,7 @@ object writer {
 
 	case class otPage( vcc: Vector[(Corpus, Corpus)], fileName: String, prevFn: Option[String], nextFn: Option[String], index: Int, howMany: Int)
 
-	def htmlPages( vvcc: Vector[Vector[(Corpus, Corpus)]], htmlDirectory: String = "html/pages/"): Unit = {
+	def htmlPages( vvcc: Vector[Vector[(Corpus, Corpus)]], oTokens: Vector[OToken], lexColl: Vector[LsjDef], ot: Oedipus, htmlDirectory: String = "html/pages/"): Unit = {
 		// clear directory 
 		val htmlDir: File = File(htmlDirectory)
 		htmlDir.clear()
@@ -85,8 +178,11 @@ object writer {
 			otPage(vcc, fileName, prevFn, nextFn, index, howMany)
 		})
 		// Make a page for each and save it!
-	  for ( p <- otPages ) {
-	  	htmlPage( p, htmlDirectory )
+	  for ( pi <- otPages.zipWithIndex ) {
+	  	val p = pi._1
+	  	val i = pi._2
+	  	println(s"Writing page ${i + 1} of ${otPages.size}")
+	  	htmlPage( p, oTokens, lexColl, htmlDirectory, ot )
 	  }
 
 
@@ -116,7 +212,7 @@ object writer {
 		s"""<div class="cts_progress"><progress class="cts_progress" max="${howMany}" value="${index + 1}"/></div>"""
 	}
 
-	def navString( prevFileName: Option[String], nextFileName: Option[String]): String = {
+	def getNavString( prevFileName: Option[String], nextFileName: Option[String]): String = {
 		val prevStr: String = prevFileName match {
 			case Some(fn) => {
 				s"""<span class="cts_prev"><a href="${fn}"> ⇽ </a></span>"""

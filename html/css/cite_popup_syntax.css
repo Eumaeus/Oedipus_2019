@@ -23,7 +23,9 @@ p.node-desc {
     padding: 1em;
     margin: 1em;
     border-radius: 30px;
-    position: absolute;
+    position: fixed;
+    overflow: scroll;
+    max-height: 90%;
     top: 10px;
     background-color: #eee;
     width: 80%;
@@ -43,5 +45,9 @@ p.node-desc {
   color: red;
   text-decoration: none;
   cursor: pointer;
+}
+
+.Treant, .Trean-loaded {
+  overflow: scroll;
 }
 

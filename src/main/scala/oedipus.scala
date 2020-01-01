@@ -45,7 +45,7 @@ case class SpeakerToken( urn: CtsUrn, text: String, speaker: String, seq: Int ) 
 				}
 				val filtVec = optionVec.filter( _ != None )
 				val stringVec = filtVec.map(_.get.objectComponent)
-				s"""Morphology: ${stringVec.mkString(", ")}."""
+				s"""${stringVec.mkString(", ")}."""
 		}
 
 

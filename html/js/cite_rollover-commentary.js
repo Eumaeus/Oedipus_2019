@@ -8,6 +8,7 @@ $(document).ready(function () {
 		var findString = 'div[data-commentsOn="' + thisUrn + '"]';
 		$(".cite_rollover_commentary_comment").removeClass("visible");
 		$(findString).addClass("visible");
+		$("div#cite_rollover_commentary_text .ohco2_citableNodeText").removeClass("selected");
 		$(this).addClass("selected");
 		if ( clicked == true ) { 
 			clicked = false 
