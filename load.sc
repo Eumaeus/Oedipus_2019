@@ -13,7 +13,7 @@ import edu.holycross.shot.citeobj._
 
 
 
-val bigOT = "data/ot_small1.csv"
+val bigOT = "data/ot_small.csv"
 
 val lexColl: Vector[writer.LsjDef] = {
 	val lines: Vector[String] = utilities.loadFile("data/lsj_short.txt")
@@ -27,7 +27,7 @@ val lexColl: Vector[writer.LsjDef] = {
 
 val ot = new Oedipus( bigOT )
 
-val lib = utilities.loadLibrary("cex/ot_small1.cex")
+val lib = utilities.loadLibrary("cex/ot_small.cex")
 val tr = lib.textRepository.get
 val cat = tr.catalog
 val cexCorp = tr.corpus
@@ -40,14 +40,6 @@ val tokU = CtsUrn("urn:cts:greekLit:tlg0011.tlg004.fu.tokens:")
 val otContent: Vector[ Vector [(Corpus, Corpus)]] = ot.readerPair(25)
 
 writer.htmlPages(otContent, ot.tokens, lexColl, ot)
-
-/*
-val cexTokCorp = cexCorp >= tokU
-val cexSpCorp = cexCorp >= spU
-
-val tokCorp = ot.corpus >= tokU
-val spCorp = ot.corpus >= spU
-*/
 
 
 

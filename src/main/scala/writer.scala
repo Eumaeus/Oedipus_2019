@@ -151,6 +151,11 @@ object writer {
 		utilities.loadFile(path).mkString("\n")
 	}
 
+	def getIndexTemplate: String = {
+		val path = "templates/index.html"
+		utilities.loadFile(path).mkString("\n")
+	}
+
 	case class otPage( vcc: Vector[(Corpus, Corpus)], fileName: String, prevFn: Option[String], nextFn: Option[String], index: Int, howMany: Int)
 
 	def htmlPages( vvcc: Vector[Vector[(Corpus, Corpus)]], oTokens: Vector[OToken], lexColl: Vector[LsjDef], ot: Oedipus, htmlDirectory: String = "html/pages/"): Unit = {
@@ -182,8 +187,10 @@ object writer {
 	  	val p = pi._1
 	  	val i = pi._2
 	  	println(s"Writing page ${i + 1} of ${otPages.size}")
-	  	htmlPage( p, oTokens, lexColl, htmlDirectory, ot )
+	  	//htmlPage( p, oTokens, lexColl, htmlDirectory, ot )
 	  }
+	  // Make index page
+	  makeIndexPage(otPages)
 
 
 		/*
@@ -191,6 +198,11 @@ object writer {
 			hv.save( filePath = htmlDirectory)
 		}
 		*/
+	}
+
+	def makeIndexPage(otPages: Vector[otPage], htmlDirectory: String = "html/pages/"): Unit = {
+			val templatePage: String = getIndexTemplate
+			utilities.saveString(templatePage, htmlDirectory, "index.html")
 	}
 
 	def generateFileName( vcc: Vector[(Corpus, Corpus)], suffix: String = ".html" ): String = {
