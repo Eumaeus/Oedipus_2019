@@ -130,6 +130,8 @@ object writer {
 		val syntaxFileName: String = s"""syntax-${p.fileName.replaceAll("\\.html","")}.js"""
 		val syntaxData: String = makeSyntaxFile(p, oTokens, ot)
 		utilities.saveString(syntaxData, path, syntaxFileName)
+		// Get progress bar
+		val progBar: String = sequenceString(p.index, p.howMany)
 		// Get navigation
 		val navString: String = {
 			getNavString(p.prevFn, p.nextFn)
@@ -142,7 +144,7 @@ object writer {
 		}
 
 		// Swap in text-content
-		val withText: String = template.replaceAll("TEXT_GOES_HERE", textBlock).replaceAll("MORPHOLOGY_GOES_HERE",morphologyBlock).replaceAll("SYNTAX_DATA_FILE_NAME",syntaxFileName).replaceAll("LINE_NUMBERS_HERE", lineNumbers).replaceAll("NAVIGATION_HERE", navString)
+		val withText: String = template.replaceAll("TEXT_GOES_HERE", textBlock).replaceAll("MORPHOLOGY_GOES_HERE",morphologyBlock).replaceAll("SYNTAX_DATA_FILE_NAME",syntaxFileName).replaceAll("LINE_NUMBERS_HERE", lineNumbers).replaceAll("NAVIGATION_HERE", navString).replaceAll("PROGRESS_BAR_HERE", progBar)
 		utilities.saveString(withText, path, p.fileName)
 	}
 
@@ -187,22 +189,32 @@ object writer {
 	  	val p = pi._1
 	  	val i = pi._2
 	  	println(s"Writing page ${i + 1} of ${otPages.size}")
-	  	//htmlPage( p, oTokens, lexColl, htmlDirectory, ot )
+	  	htmlPage( p, oTokens, lexColl, htmlDirectory, ot )
 	  }
 	  // Make index page
 	  makeIndexPage(otPages)
 
-
-		/*
-		for ( hv <- htmlVec) {
-			hv.save( filePath = htmlDirectory)
-		}
-		*/
 	}
 
 	def makeIndexPage(otPages: Vector[otPage], htmlDirectory: String = "html/pages/"): Unit = {
 			val templatePage: String = getIndexTemplate
-			utilities.saveString(templatePage, htmlDirectory, "index.html")
+			val toc: String = {
+				otPages.zipWithIndex.map( pi => {
+					val index: Int = pi._2 + 1
+					val p: otPage = pi._1
+					val vcc: Vector[(Corpus, Corpus)] = p.vcc
+					val fn: String = p.fileName
+					val fromLine: String = {
+						vcc.head._2.urns.head.collapsePassageTo(1).passageComponent
+					}
+					val toLine: String = {
+						vcc.last._2.urns.last.collapsePassageTo(1).passageComponent
+					}
+					s"""<li><a href="${fn}">Lines ${fromLine}–${toLine}</a></li>"""
+				}).mkString("\n")
+			}
+			val indexString = templatePage.replaceAll("CONTENTS_GO_HERE", toc)
+			utilities.saveString(indexString, htmlDirectory, "index.html")
 	}
 
 	def generateFileName( vcc: Vector[(Corpus, Corpus)], suffix: String = ".html" ): String = {
@@ -240,7 +252,13 @@ object writer {
 		}
 
 		val middleStr: String = {
-			if ( (prevFileName != None) && (nextFileName != None) ) " | " else ""
+			if ( (prevFileName != None) && (nextFileName != None) ) {
+				"""| <a href="index.html">toc</a> | """
+			} else if (prevFileName != None) {
+				"""| <a href="index.html">toc</a>"""
+			} else {
+				"""<a href="index.html">toc</a> | """
+			}
 		}
 
 		s"""<div class="cts_nav">${prevStr}${middleStr}${nextStr}</div>"""

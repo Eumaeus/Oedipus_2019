@@ -13,20 +13,27 @@ html {
 	font-weight: 700;
 	display: inline-block;
 	position: relative;
-	font-size: 14pt;
-	top: -19px;
+	font-size: 20pt;
+	top: -18px;
 	margin-left: 10px;
 }
 
 img.furman_logo {
-	margin: 9px 0 0 12px;
+	margin: 16px 0 0 12px;
 	position: relative;
 	top: inherit;	
 }
 
+article {
+	background-color: white;
+	border: 1px solid #582C83;
+	padding: 1em;
+	margin-top: 1em;
+}
+
 header {
 	background-color: white;
-	padding: 3px;
+	padding: 8px 8px 4px 10px;
 	border: 1px solid #582C83;
 }
 
@@ -39,10 +46,14 @@ a:hover {
 }
 
 .ot_nav {
-	border-top: 1px solid silver;
-	border-bottom: 1px solid silver;
+	margin: 1em 0 1em 0;
+	font-family: Helvetica, sans;
+	font-size: 14pt;
 }
 
+progress {
+	width: 100%;
+}
 
 .ohco2_commentBlock {
 	font-size: 85%;
@@ -78,7 +89,7 @@ a:hover {
 }
 
 .ot_morph {
-	color: maroon;
+	color: navy;
 	font-weight: bold;
 }
 
