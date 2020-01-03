@@ -23,9 +23,14 @@ object writer {
 				foundEntry match {
 					case None => s"""<p class="ot_lsj_link">No LSJ entry found for ${u}.</p>"""
 					case Some(e) => {
+						val thisEntry: String = {
+							if (e.entry.size > 500) {
+								e.entry.take(500) + "…"
+							} else e.entry
+						}
 						s"""<p class="ot_lsj_link">
 						<a href="${lexUrl}${u.dropVersion}" target="_blank"><span class="ot_lsj_lemma">${e.lemma}</a>
-						<span class="ot_lsj_def">${e.entry}</span>
+						<span class="ot_lsj_def">${thisEntry}</span>
 						</p>"""
 					}
 				}

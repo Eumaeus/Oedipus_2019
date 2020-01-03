@@ -6,12 +6,13 @@
 	margin-top: 1em;
 	background-color: white;
 	padding: 1em;
-	font-size: 125%;
+	font-size: 135%;
 }
 
 #cite_rollover_commentary_comments {
 	position: fixed;
 	margin-top: 1em;
+	margin-bottom: 5em;
 	display: block;
 	background-color: rgb(201, 194, 183);
 	top: 75px;
