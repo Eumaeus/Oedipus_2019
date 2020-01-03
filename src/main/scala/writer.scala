@@ -24,7 +24,7 @@ object writer {
 					case None => s"""<p class="ot_lsj_link">No LSJ entry found for ${u}.</p>"""
 					case Some(e) => {
 						s"""<p class="ot_lsj_link">
-						<a href="${lexUrl}${u.dropVersion}"><span class="ot_lsj_lemma">${e.lemma}</a>
+						<a href="${lexUrl}${u.dropVersion}" target="_blank"><span class="ot_lsj_lemma">${e.lemma}</a>
 						<span class="ot_lsj_def">${e.entry}</span>
 						</p>"""
 					}
@@ -33,7 +33,7 @@ object writer {
 		}	
 	}
 	
-	def writeTextBlock( vcc: Vector[(Corpus,Corpus)] ): String = {
+	def writeTextBlock( vcc: Vector[(Corpus,Corpus)], oTokens: Vector[OToken] ): String = {
 		val readerWrapper = """<div class="ohco2_versionCorpus"><div class="ohco2_passageGroup  ohco2_stanza ">"""
 		val readerWrapperClose = """</div></div>"""
 		val tokenWrapper = """<div class="ohco2_passageGroup  ohco2_tokenized">"""
@@ -55,7 +55,7 @@ object writer {
 						val twiddleUrn = n.urn.dropExemplar.collapsePassageTo(1)
 						val tokenCorp: Corpus = cc._2 ~~ twiddleUrn
 						val nodesHtml = tokenCorp.nodes.map( tn => {
-							HtmlWriter.writeCitableNode(tn)
+							writeOhco2Node(tn, oTokens)
 						}).mkString("\n")
 						s"${tokenWrapper}\n${nodesHtml}\n${tokenWrapperClose}"	
 					}
@@ -64,6 +64,30 @@ object writer {
 			})
 			readerWrapper + "\n" + passages.mkString("\n") + "\n" + readerWrapperClose
 		}).mkString("\n")
+	}
+
+	def writeOhco2Node( n: CitableNode, oTokens: Vector[OToken]): String = {
+
+		val nodeHtml = HtmlWriter.writeCitableNode(n, true)
+		val headUrnStr: String = {
+			val thisToken: Option[OToken] = oTokens.find(_.ctsUrn == n.urn)	
+			thisToken match {
+				case None => ""
+				case Some(t) => {
+					val headUrn: Option[Cite2Urn] = t.headTokenUrn					
+					headUrn match {
+						case None => ""
+						case Some(u) => {
+							oTokens.find( _.tokenUrn == u) match {
+								case None => ""
+								case Some(ot) => s"${ot.ctsUrn}"
+							}
+						}
+					}
+				}
+			}	
+		}
+		s"""<span class="cite_inline_syntax" data-head="${headUrnStr}">${nodeHtml}</span>"""
 	}
 
 	def writeMorphBlock(vcc: Vector[ (Corpus, Corpus) ], oTokens: Vector[OToken], lexColl: Vector[LsjDef]): String = {
@@ -123,7 +147,7 @@ object writer {
 	def htmlPage( p: otPage, oTokens: Vector[OToken], lexColl: Vector[LsjDef], path: String, ot: Oedipus): Unit = {
 		val template: String = getTemplate
 		// Write text-content
-		val textBlock: String = writeTextBlock(p.vcc)
+		val textBlock: String = writeTextBlock(p.vcc, oTokens)
 		// Write morphology
 		val morphologyBlock: String = writeMorphBlock(p.vcc, oTokens, lexColl)
 		// Write syntax

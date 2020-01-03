@@ -1,5 +1,4 @@
 html {
-	margin: 0 3em 3em 3em;
 	font-family: "EB Garamond",  "LinuxLibertineORegular", "AseaRegular", "Times", serif; 
 	line-height: 1.5em;
 	color: #222;
@@ -7,14 +6,23 @@ html {
 	background-color: rgba(201, 194, 183, 0.24);
 }
 
+article, footer p {
+	margin: 0 3em 3em 3em;
+}
+
+body {
+	margin: 0;
+}
+
 .furman_logo {
-	color: #582C83;
+  /* background-color: #582C83; */
+  color: white;
 	font-family: 'Quattrocento Sans', sans-serif;
-	font-weight: 700;
+	font-weight: 400;
 	display: inline-block;
 	position: relative;
-	font-size: 20pt;
-	top: -18px;
+	font-size: 16pt;
+	top: -14px;
 	margin-left: 10px;
 }
 
@@ -22,6 +30,7 @@ img.furman_logo {
 	margin: 16px 0 0 12px;
 	position: relative;
 	top: inherit;	
+	background-color: white;
 }
 
 article {
@@ -32,7 +41,8 @@ article {
 }
 
 header {
-	background-color: white;
+  background-color: #582C83;
+  color: white;
 	padding: 8px 8px 4px 10px;
 	border: 1px solid #582C83;
 }
