@@ -12,9 +12,10 @@ import edu.holycross.shot.citeobj._
 
 
 
-
+// Master data for the play
 val bigOT = "data/ot_all.csv"
 
+// Data for providing short LSJ definitions
 val lexColl: Vector[writer.LsjDef] = {
 	val lines: Vector[String] = utilities.loadFile("data/lsj_short.txt")
 	lines.map( l => {
@@ -25,22 +26,25 @@ val lexColl: Vector[writer.LsjDef] = {
 	})
 }
 
+// Make an Object out of play's data
 val ot = new Oedipus( bigOT )
 
-val lib = utilities.loadLibrary("cex/ot_all.cex")
-val tr = lib.textRepository.get
-val cat = tr.catalog
-val cexCorp = tr.corpus
+/* USER CUSTOMIZABLE SETTING!
+	 default: 25
 
-val fuU = CtsUrn("urn:cts:greekLit:tlg0011.tlg004.fu:")
-val spU = CtsUrn("urn:cts:greekLit:tlg0011.tlg004.fu.sp:")
-val tokU = CtsUrn("urn:cts:greekLit:tlg0011.tlg004.fu.tokens:")
+	 The script will try to put 25 poetic lines on a page, while
+	 keeping speeches intact (so some pages will have more than 25 lines)
+*/
 
+val linesPerPage: Int = 25
 
-val otContent: Vector[ Vector [(Corpus, Corpus)]] = ot.readerPair(25)
+// Gather data for the pages…
+val otContent: Vector[ Vector [(Corpus, Corpus)]] = ot.readerPair(linesPerPage)
 
+// Write the pages and their accompanying JS files…
 writer.htmlPages(otContent, ot.tokens, lexColl, ot)
 
+println(s"Done making ${otContent.size} pages.")
 
 
 
