@@ -15,7 +15,8 @@
 	margin-bottom: 5em;
 	display: block;
 	background-color: rgb(201, 194, 183);
-	top: 75px;
+	border: 1px solid rgb(159, 159, 159);
+	top: 50px;
 	right: 25px;
 	max-width: 30%;
 	width: 35em;
@@ -23,6 +24,9 @@
 	padding: 1em;
 	overflow: scroll;
 	max-height: 90%;
+	-webkit-box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
+	-moz-box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
+	box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
 }
 
 #cite_rollover_commentary_comments h1 {

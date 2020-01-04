@@ -3,11 +3,8 @@ $(document).ready(function () {
 
 	for ( c in configArray) {
 		var containerId = configArray[c].containerId;
-		console.log(containerId);
 		var json = configArray[c].json;
-		console.log(json);
 		var i = c;
-		console.log("got here");
 		$('body').append('<div id="syntax-modal-' + containerId + '" class="modal-content"><span class="syntax_close">&times;</span><div id="' + containerId + '" class="cite_popup_syntax" style="width:100%; height: 100%"> </div></div>');
 
 	}
@@ -21,7 +18,6 @@ $(document).ready(function () {
 
 	$("a.open-syntax-modal").click(function(){ 
 		var target = $(this).attr("data-target");
-		console.log(target)
 		$("#syntax-modal-" + target).toggle();
 	});
 

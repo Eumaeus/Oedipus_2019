@@ -40,7 +40,6 @@ $(document).ready(function () {
     $(this).addClass("inline_syntax_focus");
     addInlineSyntaxHighlights(thisHead, 1);
     var thisUrn = $(this).first().children().first().attr("data-ctsurn");
-    console.log( $(this).children().first() );
     highlightDependants(thisUrn);
   }, function() {
     removeInlineSyntaxClasses();

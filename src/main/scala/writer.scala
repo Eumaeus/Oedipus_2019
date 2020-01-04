@@ -29,7 +29,7 @@ object writer {
 							} else e.entry
 						}
 						s"""<p class="ot_lsj_link">
-						<a href="${lexUrl}${u.dropVersion}" target="_blank"><span class="ot_lsj_lemma">${e.lemma}</a>
+						<a href="${lexUrl}${u.dropVersion}" target="_blank"><span class="ot_lsj_lemma">${e.lemma}</span><span class="ot_lsj_link_notice">link to full entry</span></a>
 						<span class="ot_lsj_def">${thisEntry}</span>
 						</p>"""
 					}

@@ -5,6 +5,12 @@ p.node-name, p.node-desc {
     padding: 3px;
 }
 
+p.node-name {
+  font-size: 20pt;
+  font-weight: 600;
+  color: rgb(157, 0, 0);
+}
+
 p.node-desc {
     color: #999;
 }
@@ -31,7 +37,7 @@ p.node-desc {
     overflow: scroll;
     max-height: 85%;
     top: 10px;
-    background-color: rgba(255, 255, 255, 0.89);
+    background-color: rgba(255, 255, 255, 0.95);
     width: 80%;
     -webkit-box-shadow: 10px 9px 35px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 10px 9px 35px 0px rgba(0,0,0,0.75);

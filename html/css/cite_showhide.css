@@ -11,7 +11,7 @@ div.cite_showhide_header:after {
   content: '▸';
   position: absolute;
   left: 6px;
-  top: 0px;
+  top: 17px;
   opacity: 0.5;
   font-size: 20px;
 }
