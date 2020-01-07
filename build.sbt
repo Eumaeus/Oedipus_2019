@@ -1,7 +1,7 @@
 
 name := "oedipus2019"
 
-version := "0.0.1"
+version := "1.2.0"
 
 // must be at least 2.11 to use hmt_textmodel
 scalaVersion := "2.12.8"
