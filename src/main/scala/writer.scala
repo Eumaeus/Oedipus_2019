@@ -300,6 +300,7 @@ object writer {
 		val fixedText = preText.replaceAll(" ,",",")
 												   .replaceAll(" :",":")
 												   .replaceAll(" \\.",".")
+												   .replaceAll(" ;",";")
 		val lineNo: String = u.collapsePassageTo(1).passageComponent
 		val newText = s"""<span class="ot_lineNo">${lineNo}</span>${fixedText}"""
 		CitableNode(u, newText)
