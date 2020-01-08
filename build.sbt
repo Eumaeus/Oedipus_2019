@@ -28,12 +28,12 @@ javaOptions in run ++= Seq(
 libraryDependencies ++=   Seq(
   "com.github.tototoshi" %% "scala-csv" % "1.3.6",
   "edu.holycross.shot.cite" %% "xcite" % "4.1.2",
-  "edu.holycross.shot" %% "ohco2" % "10.17.0",
-  "edu.holycross.shot" %% "scm" % "7.0.1",
+  "edu.holycross.shot" %% "ohco2" % "10.18.1",
+  "edu.holycross.shot" %% "scm" % "7.2.0",
   "edu.holycross.shot" %% "citebinaryimage" % "3.1.1",
-  "edu.holycross.shot" %% "citeobj" % "7.3.4",
-  "edu.holycross.shot" %% "citerelations" % "2.5.2",
-  "edu.holycross.shot" %% "cex" % "6.3.3",
+  "edu.holycross.shot" %% "citeobj" % "7.4.0",
+  "edu.holycross.shot" %% "citerelations" % "2.6.0",
+  "edu.holycross.shot" %% "cex" % "6.4.0",
   "edu.holycross.shot" %% "greek" % "2.4.0",
   "edu.furman.classics" %% "citewriter" % "1.2.2",
   "com.github.pathikrit" %% "better-files" % "3.8.0"
