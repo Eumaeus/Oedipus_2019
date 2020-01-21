@@ -10,11 +10,25 @@ import scala.annotation.tailrec
 
 object syntax {
 	
-	case class SyntaxNode( sentenceUrn: Cite2Urn, tokenUrn: Cite2Urn, ctsUrn: Option[CtsUrn], surfaceForm: String, relation: Option[Cite2Urn], relationLabel: String, head: Option[Cite2Urn])
+	case class SyntaxNode( sentenceUrn: Cite2Urn, tokenUrn: Cite2Urn, ctsUrn: Option[CtsUrn], surfaceForm: String, relation: Option[Cite2Urn], relationLabel: String, head: Option[Cite2Urn], otoken: OToken)
 
 	case class GraphedNode( node: SyntaxNode, children: Vector[GraphedNode])
 
+	case class GenericNode( marker: Option[Cite2Urn], relation: Option[Cite2Urn] )
+	case class GenericGraphedNode( node: GenericNode, children: Vector[GenericGraphedNode])
+
 	case class SyntaxSentence( sentenceUrn: Cite2Urn, nodes: Vector[SyntaxNode]) {
+
+		def toGenericGraph( marker: Option[Cite2Urn] = None, relation: Option[Cite2Urn] = None): Map[ Option[Cite2Urn], Vector[SyntaxNode]] = {
+			// Group by headTokenUrn
+
+			val grouped: Map[ Option[Cite2Urn], Vector[SyntaxNode]] = {
+				nodes.groupBy( _.head)
+			}
+
+			grouped
+						
+		}
 
 		def toJson: String = {
 
@@ -30,7 +44,7 @@ object syntax {
 				nodeStructure: {
 		        text: { name: "Root" },
 		        children: [
-		        	${ syntaxRecurse( grouped, None )}
+		        	${ syntaxRecurseJson( grouped, None )}
 		        ]
 				  }
 				""".replaceAll("\n"," ").replaceAll("\t"," ").replaceAll(" +"," ")
@@ -61,7 +75,8 @@ object syntax {
 
 	}
 
-	def syntaxRecurse( grouped: Map[ Option[Cite2Urn], Vector[SyntaxNode]], urnOpt: Option[Cite2Urn]): String = {
+
+	def syntaxRecurseJson( grouped: Map[ Option[Cite2Urn], Vector[SyntaxNode]], urnOpt: Option[Cite2Urn]): String = {
 		grouped(urnOpt).map( n => {
 			s"""
 			{
@@ -72,7 +87,7 @@ object syntax {
 				children: [
 				${
 						val newU = n.tokenUrn
-						if (grouped.contains( Some(newU)) ) syntaxRecurse(grouped, Some(newU))
+						if (grouped.contains( Some(newU)) ) syntaxRecurseJson(grouped, Some(newU))
 						else ""
 				 }
 				]

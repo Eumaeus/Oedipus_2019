@@ -340,7 +340,8 @@ class Oedipus( filePath: String ) {
 					if (u.objectComponent.contains("_0")) None
 					else Some(u)
 				}
-				syntax.SyntaxNode(su, tu, ctsUrn, sf, rel, relLabel, hUrn)
+				val otoken: OToken = t
+				syntax.SyntaxNode(su, tu, ctsUrn, sf, rel, relLabel, hUrn, t)
 			})
 		}
 		syntax.SyntaxSentence(sentenceUrn, syntaxNodes )
