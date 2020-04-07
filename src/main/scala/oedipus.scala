@@ -177,7 +177,7 @@ class Oedipus( filePath: String ) {
 
 		println(s"\n\nvalid sequence = ${validOrderTest}\n\n")
 
-		/* There may be one speaker per line, so let's 
+		/* There may be more than one speaker per line, so let's 
 		   group tokens by speaker within a line
 		*/
 		val groupedBySpeaker: Vector[(CtsUrn, Vector[(String, Vector[SpeakerToken])])] = {
@@ -196,8 +196,17 @@ class Oedipus( filePath: String ) {
 						}
 						sorted
 					}
+					println(s"\n-----\n${lineUrn}\n\n${groupedBySpeaker}")
 					(lineUrn, groupedBySpeaker)
+				}).map( sl => {
+					val u: CtsUrn = sl._1
+					val v: Vector[(String, Vector[SpeakerToken])] = {
+						sl._2.sortBy(_._2.head.seq)
+					}
+					(u, v)
 				})
+
+				
 		}
 
 		/* Turn this into a Vector[ ( urn, Vector[ (string, string) ] ) ]
